@@ -25,28 +25,41 @@ jQuery(document).ready(function($){
         return false;
     });
     
-    $('#listing_status').fSelect({
-        placeholder: 'Status',
-        searchText: 'Search status...'
-    });
     
-    $('#listing_city').fSelect({
-        placeholder: 'City',
-        searchText: 'Search city...'
-    });
+    function load_selection_fields() {
+       $('#listing_status').fSelect({
+            placeholder: 'Status',
+            searchText: 'Search status...'
+        });
+
+        $('#listing_city').fSelect({
+            placeholder: 'City',
+            searchText: 'Search city...'
+        });
+
+        $('#listing_zipcode').fSelect({
+            placeholder: 'Zip',
+            searchText: 'Search zip code...'
+        });
+
+        $('#listing_broker').fSelect({
+            placeholder: 'Broker',
+            searchText: 'Search name...'
+        });
+
+        $('#listing_property_type').fSelect({
+            placeholder: 'Property Type',
+            searchText: 'Search property type...'
+        }); 
+    }
     
-    $('#listing_zipcode').fSelect({
-        placeholder: 'Zip',
-        searchText: 'Search zip code...'
-    });
+    load_selection_fields();
     
-    $('#listing_broker').fSelect({
-        placeholder: 'Broker',
-        searchText: 'Search name...'
-    });
     
-    $('#listing_property_type').fSelect({
-        placeholder: 'Property Type',
-        searchText: 'Search property type...'
+    $('body').on('click','#reset_filter',function(e){
+        e.preventDefault();
+        $('#listingFilter').load( full_url + ' .prop-form-inner',function(){
+            load_selection_fields();
+        });
     });
 });

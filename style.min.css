@@ -1750,11 +1750,11 @@ h3{font-size:16px;color:#910008}
 h4{font-size:14px}
 h5{font-size:14px}
 h6{font-size:14px}
-#main-header{width:1400px;margin-left:auto;margin-right:auto}
+#main-header{max-width:1400px;width:100%;margin-left:auto;margin-right:auto}
 #main{width:1400px;margin-left:auto;margin-right:auto;position:relative}
-.post-container{width:1207px;padding-left:120px;float:left;min-height:400px}
+.post-container{width:1200px;padding-left:120px;float:left;min-height:400px}
 #footer{width:1400px;margin-left:auto;margin-right:auto;text-align:center;padding-top:20px}
-#header{width:1207px;padding-left:120px;float:left;background-image:url(images/bg-header.png);background-repeat:no-repeat;background-position:top right}
+#header{width:1200px;padding-left:120px;float:left;background-image:url(images/bg-header.png);background-repeat:no-repeat;background-position:top right}
 #logo{width:445px;height:134px;float:left}
 #header-content{width:570px;height:120px;float:right;padding-right:26px}
 #header-content3{width:200px;height:80px;float:right;padding-top:23px;text-align:right;font-size:16px;font-family:'Archivo Narrow',sans-serif;padding-right:45px}
@@ -1770,7 +1770,7 @@ h6{font-size:14px}
 #navigation{width:947px;height:56px;float:right;background-image:url(images/bg-navigation.jpg);background-repeat:no-repeat;background-position:top right}
 #framed{width:760px;padding-bottom:10px;float:left}
 #framed iframe{width:100% !important}
-#mobile-navigation{visibility:hidden}
+#mobile-navigation{display:none}
 #mobile-hide{visibility:hidden}
 #home-button{width:100px;float:left;font-size:18px;height:44px;font-family:'Archivo Narrow',sans-serif;padding-top:18px;padding-bottom:14px;background-image:url(images/bg-navitem.png);background-repeat:no-repeat;background-position:top right}
 #home-button a:link{color:#fff;text-decoration:none}
@@ -1919,7 +1919,7 @@ ol.pings h3{font-size:.9em}
 #access ul li:hover>ul{display:block}
 #access .current-menu-item>a,#access .current-menu-ancestor>a,#access .current_page_item>a,#access .current_page_ancestor>a{color:#c5bdae}
 #access li:last-child{border-right:0;background-image:none}
-@media all and (max-width:1200px){#main-header{width:100%;margin-left:auto;margin-right:auto}
+@media all and (max-width:960px){#main-header{width:100%;margin-left:auto;margin-right:auto}
 #main{width:100%;margin-left:auto;margin-right:auto;position:relative}
 .post-container{width:90%;padding-left:5%;float:left;min-height:400px}
 #footer{width:100%;padding-left:0;padding-top:1%;height:auto}
@@ -1936,7 +1936,7 @@ ol.pings h3{font-size:.9em}
 #header-content1{font-size:20px;float:right;text-align:left;padding-right:30px}
 #header-content2{width:100%;font-size:15px;color:#910008;float:right;text-align:right;padding-top:0;padding-right:30px}
 #navigation{visibility:hidden}
-#mobile-navigation{float:left;width:93%;background-color:#8f0208;padding-left:7%;padding-bottom:10px;visibility:visible}
+#mobile-navigation{float:left;width:93%;background-color:#8f0208;padding-left:7%;padding-bottom:10px;visibility:visible;display:inline-block}
 #mobile-navigation a:link{color:#fff;text-decoration:none}
 #mobile-navigation a:visited{color:#fff;text-decoration:none}
 #mobile-navigation a:hover{color:#c5bdae;text-decoration:none}
@@ -2064,6 +2064,7 @@ hr{color:#000;background-color:#000;border:0;height:1px}
 .property-lists .features .city{font-weight:bold;font-size:20px}
 .property-lists .details{width:22%}
 .property-lists .property-name{margin:0 0 15px;color:#8f0411;font-size:20px}
-.property-lists .plink{display:block;padding:10px 20px;width:141px;box-sizing:border-box;background:#3f5ba9;color:#FFF;text-decoration:none;text-align:center;text-transform:uppercase;font-size:13px}
+.property-lists .plink{display:block;padding:10px 20px;width:141px;box-sizing:border-box;background:#3f5ba9;color:#FFF;text-decoration:none;text-align:center;text-transform:uppercase;font-size:13px;-webkit-transition:all ease-out .2s;transition:all ease-out .2s}
+.property-lists .plink:hover{background:#263a71}
 .infinite-scroll .posts-navigation,.infinite-scroll.neverending .site-footer{display:none}
 .infinity-end.neverending .site-footer{display:block}
