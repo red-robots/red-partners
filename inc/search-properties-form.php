@@ -5,6 +5,7 @@ $cities = listing_cities();
 $zipcodes = listing_zipcodes();
 $brokers = listing_brokers();
 $property_types = listing_property_types();
+
 ?>
 <div class="sp_form clear">
     <div class="row clear">
@@ -12,7 +13,7 @@ $property_types = listing_property_types();
             <div class="prop-form-inner clear">
                 <div class="form-group fieldwrap street_address">
                     <div class="inputdiv">
-                        <input type="text" name="street_address" id="street_address" class="form-control" placeholder="Street Address" />  
+                        <input type="text" name="street" id="street" class="form-control" placeholder="Street Address" />  
                         <a href="#" class="street_button btn">Update</a>
                     </div>
                 </div>

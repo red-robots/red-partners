@@ -2066,5 +2066,18 @@ hr{color:#000;background-color:#000;border:0;height:1px}
 .property-lists .property-name{margin:0 0 15px;color:#8f0411;font-size:20px}
 .property-lists .plink{display:block;padding:10px 20px;width:141px;box-sizing:border-box;background:#3f5ba9;color:#FFF;text-decoration:none;text-align:center;text-transform:uppercase;font-size:13px;-webkit-transition:all ease-out .2s;transition:all ease-out .2s}
 .property-lists .plink:hover{background:#263a71}
+#pagination{margin-top:30px}
+#pagination a,#pagination span{display:inline-block;text-decoration:none;border:1px solid #ccc;padding:6px 12px;margin-right:1px;-webkit-transition:all ease-out .2s;transition:all ease-out .2s}
+#pagination a:hover{border-color:#8f0411;color:#8f0411}
+#pagination .current{background:#8f0411;border-color:#8f0411;color:#FFF}
+.notfound{border:1px solid #8f0411;color:#8f0411;padding:10px 20px;font-size:20px;background:#fcecee;margin-top:20px}
+#pagination ul.pagination{margin:0;padding:0;list-style:none}
+#pagination ul.pagination li{background:0;padding-left:0;display:inline-block;float:left;margin-right:4px;position:relative}
+#pagination ul.pagination li a{-webkit-transition:all ease-out .2s;transition:all ease-out .2s}
+#pagination ul.pagination li.active a{background:#8f0411;border-color:#8f0411;color:#FFF}
+#pagination ul.pagination li.active a:hover{color:#FFF}
+#pagination ul.pagination li span.cover{display:none}
+#pagination ul.pagination li.disabled span.cover,#pagination ul.pagination li.active span.cover{display:block;width:100%;height:100%;background:#f0efef;position:absolute;top:0;left:0;z-index:2;opacity:.75;padding:0;border:0}
+#pagination ul.pagination li.active span.cover{opacity:0}
 .infinite-scroll .posts-navigation,.infinite-scroll.neverending .site-footer{display:none}
 .infinity-end.neverending .site-footer{display:block}

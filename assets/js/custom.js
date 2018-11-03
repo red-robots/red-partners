@@ -62,4 +62,18 @@ jQuery(document).ready(function($){
             load_selection_fields();
         });
     });
+    
+    $('body').on('change','#listing_status',function(){
+        var selections = $(this).val();
+    });
+    
+    $('body').on('click','ul.pagination li',function(){
+        var link = $(this).find('a');
+        if( $(this).hasClass('disabled') ) {
+            var url = link.attr('href');
+            link.on("click",function(e){
+                e.preventDefault();
+            });
+        }
+    });
 });
