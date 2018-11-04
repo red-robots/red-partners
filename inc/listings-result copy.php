@@ -1,19 +1,27 @@
 <?php  
-$perpage = 2;
-$paged = ( get_query_var( 'pg' ) ) ? absint( get_query_var( 'pg' ) ) : 1;
-$args = array(
-    'posts_per_page'   => $perpage,
-    'orderby'          => 'menu_order',
-    'order'            => 'DESC',
-    'post_type'        => 'properties',
-    'post_status'      => 'publish',
-    'paged'			   => $paged
-    );
-$items = new WP_Query($args);
-if ( $items->have_posts() ) { ?>
-<div class="property-lists clear">
-    <?php $i=1; while ( $items->have_posts() ) : $items->the_post(); 
-        $post_id = get_the_ID();
+$offset = 0;
+$limit = 2;
+$pg = ( isset($_GET['pg']) && $_GET['pg'] ) ? $_GET['pg'] : 1;
+$params['property_type'] = array('9');
+$search_results = listing_query($params,$pg,$limit);
+$limit  = ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : $limit;
+$page   = ( isset( $_GET['pg'] ) ) ? $_GET['pg'] : 1;
+$links  = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 7;
+
+if ( $search_results ) { 
+    $records = $search_results['records'];
+    $total_pages = $search_results['total'];
+    $items_text = ($total_pages>1) ? ' items':' item';
+        
+    if( $records) { ?>
+    <div class="property-lists clear wrapper">
+    <div class="found-info">
+        <strong>Result: <?php echo $total_pages . $items_text;?> found</strong>
+    </div>
+    
+    <?php $i=1; 
+    foreach($records as $row) { 
+        $post_id = $row->post_id;
         $pic = get_field('listing_image',$post_id);
         $types = get_the_terms($post_id,'property_types');
         $the_types = '';
@@ -63,7 +71,7 @@ if ( $items->have_posts() ) { ?>
         <div class="infoCol">
             <div class="location">
                 <div class="pad clear">
-                    <h3 class="property-name"><?php the_title(); ?></h3>
+                    <h3 class="property-name"><?php echo get_the_title($post_id); ?></h3>
                     <?php if($street_address) { ?>
                     <div class="info"><?php echo $street_address;?></div>
                     <?php } ?>
@@ -90,26 +98,42 @@ if ( $items->have_posts() ) { ?>
         </div>    
 
     </div>
-    <?php $i++; endwhile; wp_reset_postdata(); ?>
+    <?php $i++; } ?>
 
-    <?php $total_pages = $items->max_num_pages;
-    if ($total_pages > 1) { ?>
+    <?php if ($total_pages > 1) { ?>
         <div id="pagination" class="pagination-wrapper clear">
         <?php
-            $big = 999999999;
-            $pagination = array(
-                'base' => @add_query_arg('pg','%#%'),
-                'format' => '?paged=%#%',
-                'current' => $paged,
-                'total' => $total_pages,
-                'prev_text' => __( '&laquo;', 'red_partners' ),
-                'next_text' => __( '&raquo;', 'red_partners' ),
-                'type' => 'plain'
-            );
-            echo paginate_links($pagination);
+//            $pagination = array(
+//                'base' => @add_query_arg('pg','%#%'),
+//                'format' => '?paged=%#%',
+//                'current' => $pg,
+//                'total' => $total_pages,
+//                'prev_text' => __( '&laquo;', 'red_partners' ),
+//                'next_text' => __( '&raquo;', 'red_partners' ),
+//                'type' => 'plain',
+//                'add_args' => array(
+//                     's' => get_query_var('s'),
+//                     'post_type' => get_query_var('post_type'),
+//                 )
+//            );
+//            $pagination = array(
+//                'base' => @add_query_arg('pg','%#%'),
+//                'format' => '?paged=%#%',
+//                'current' => $pg,
+//                'total' => $total_pages,
+//                'prev_text' => __( '&laquo;', 'red_partners' ),
+//                'next_text' => __( '&raquo;', 'red_partners' ),
+//                'type' => 'plain',
+//            );
+//            echo paginate_links($pagination);
+        
+            echo create_pagination( $links, $page, $limit, $total_pages, 'pagination' );
         ?>
         </div>
     <?php } ?> 
                              
-</div>                      
+</div>   
+    <?php } else { ?>
+    <div class="notfound">No records found.</div>
+    <?php } ?>
 <?php } ?>

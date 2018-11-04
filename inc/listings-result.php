@@ -1,17 +1,11 @@
 <?php  
-$offset = 0;
-$limit = 2;
-$pg = ( isset($_GET['pg']) && $_GET['pg'] ) ? $_GET['pg'] : 1;
-$params['property_type'] = array('9');
-$search_results = listing_query($params,$pg,$limit);
-$limit  = ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : $limit;
-$page   = ( isset( $_GET['pg'] ) ) ? $_GET['pg'] : 1;
-$links  = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 7;
-
-if ( $search_results ) { 
+function do_display_listings($search_results,$links, $page, $limit,$urlParams=null) {
+    //$search_results = listing_query($params,$pg,$limit);
+    if ( $search_results ) { 
     $records = $search_results['records'];
     $total_pages = $search_results['total'];
     $items_text = ($total_pages>1) ? ' items':' item';
+    ob_start();
         
     if( $records) { ?>
     <div class="property-lists clear wrapper">
@@ -52,8 +46,9 @@ if ( $search_results ) {
         $status = get_field('listing_status',$post_id);
         $features = get_field('listing_features',$post_id);
         $pdf_link = get_field('listing_pdf_link',$post_id);
+        $first_row = ($i==1) ? ' first':'';
     ?>
-    <div id="property_<?php the_ID();?>" class="property clear <?php echo $divClass;?>">
+    <div id="property_<?php echo $post_id;?>" class="property clear <?php echo $divClass . $first_row;?>">
         <div class="imagecol">
             <?php if($the_types) { ?>
             <div class="types">
@@ -102,38 +97,29 @@ if ( $search_results ) {
 
     <?php if ($total_pages > 1) { ?>
         <div id="pagination" class="pagination-wrapper clear">
-        <?php
-//            $pagination = array(
-//                'base' => @add_query_arg('pg','%#%'),
-//                'format' => '?paged=%#%',
-//                'current' => $pg,
-//                'total' => $total_pages,
-//                'prev_text' => __( '&laquo;', 'red_partners' ),
-//                'next_text' => __( '&raquo;', 'red_partners' ),
-//                'type' => 'plain',
-//                'add_args' => array(
-//                     's' => get_query_var('s'),
-//                     'post_type' => get_query_var('post_type'),
-//                 )
-//            );
-//            $pagination = array(
-//                'base' => @add_query_arg('pg','%#%'),
-//                'format' => '?paged=%#%',
-//                'current' => $pg,
-//                'total' => $total_pages,
-//                'prev_text' => __( '&laquo;', 'red_partners' ),
-//                'next_text' => __( '&raquo;', 'red_partners' ),
-//                'type' => 'plain',
-//            );
-//            echo paginate_links($pagination);
-        
-            echo create_pagination( $links, $page, $limit, $total_pages, 'pagination' );
+        <?php   
+            echo create_pagination( $links, $page, $limit, $total_pages, $urlParams, 'pagination' );
         ?>
         </div>
     <?php } ?> 
                              
 </div>   
     <?php } else { ?>
-    <div class="notfound">No records found.</div>
+        <?php echo list_not_found(); ?>
     <?php } ?>
-<?php } ?>
+<?php } 
+    
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+    
+}
+
+function list_not_found() { 
+    ob_start(); ?>
+    <div class="notfound">No records found.</div>
+<?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+}

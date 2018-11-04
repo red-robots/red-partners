@@ -24,56 +24,6 @@ jQuery(document).ready(function($){
         $('#click').css({"background-color":"#f00", "color":"#fff", "cursor":"inherit"}).text("Open this window again and this message will still be here.");
         return false;
     });
-    
-    
-    function load_selection_fields() {
-       $('#listing_status').fSelect({
-            placeholder: 'Status',
-            searchText: 'Search status...'
-        });
 
-        $('#listing_city').fSelect({
-            placeholder: 'City',
-            searchText: 'Search city...'
-        });
-
-        $('#listing_zipcode').fSelect({
-            placeholder: 'Zip',
-            searchText: 'Search zip code...'
-        });
-
-        $('#listing_broker').fSelect({
-            placeholder: 'Broker',
-            searchText: 'Search name...'
-        });
-
-        $('#listing_property_type').fSelect({
-            placeholder: 'Property Type',
-            searchText: 'Search property type...'
-        }); 
-    }
     
-    load_selection_fields();
-    
-    
-    $('body').on('click','#reset_filter',function(e){
-        e.preventDefault();
-        $('#listingFilter').load( full_url + ' .prop-form-inner',function(){
-            load_selection_fields();
-        });
-    });
-    
-    $('body').on('change','#listing_status',function(){
-        var selections = $(this).val();
-    });
-    
-    $('body').on('click','ul.pagination li',function(){
-        var link = $(this).find('a');
-        if( $(this).hasClass('disabled') ) {
-            var url = link.attr('href');
-            link.on("click",function(e){
-                e.preventDefault();
-            });
-        }
-    });
 });
