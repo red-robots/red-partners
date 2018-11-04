@@ -10,18 +10,37 @@
 //$params['zipcode'] = array('28205','28031');
 //$params['broker'] = array('78','310');
 //$params['property_type'] = array('9','10');
+$limit_num = 15;
 $params = ( isset($_GET) ) ? $_GET : array();
-$limit  = ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : 2;
+$limit  = ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : $limit_num;
 $page   = ( isset( $_GET['pg'] ) ) ? $_GET['pg'] : 1;
+
+
 $links  = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 7;
 $search_results = listing_query($params,$page,$limit);
 $has_result = ( isset($search_results['records']) && $search_results['records'] ) ? true : false;
 $meta_fields = array('street','keywords','status','city','zipcode','broker','property_type');
 $queried = array();
+$pagination_params = '';
+
 if($params) {
     foreach($params as $k=>$val) {
         if( in_array($k,$meta_fields) ) {
             $queried[$k] = $val;
+            if( is_array($val) ) {
+                $arr_val = '';    
+                if($val) {
+                    $j=1; foreach($val as $av) {
+                        $sep = ($j>1) ? '&':'';
+                        $arr_val .= $sep . $k . '%5B%5D=' . $av;
+                        $j++;
+                    }
+                }
+                $pagination_params .= '&' . $arr_val;
+            } else {
+                $arr_val = urlencode($val);
+                $pagination_params .= '&' . $k . '=' . $arr_val;
+            }
         }
     }
 }
@@ -51,7 +70,9 @@ if($params) {
             <div id="list_container" class="listwrap clear wrapper">
                 <?php if($queried) { ?>
                     <?php if($has_result) { ?>
-                        <?php echo do_display_listings($search_results,$links, $page, $limit); ?>
+                        <?php 
+                        $current_page = ( isset( $_GET['pg'] ) ) ? $_GET['pg'] : 1;    
+                        echo do_display_listings($search_results,$links, $current_page, $limit, $pagination_params); ?>
                     <?php } else { ?>
                         <?php echo list_not_found(); ?>
                     <?php } ?>

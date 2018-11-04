@@ -405,22 +405,18 @@ function create_pagination( $links, $page, $limit, $total, $urlParams='', $list_
     if ( $limit == 'all' ) {
         return '';
     }
-    
+
     global $post;
     $post_id = $post->ID;
     $base_url = get_permalink($post_id);
  
     $last       = ceil( $total / $limit );
- 
     $start      = ( ( $$page - $links ) > 0 ) ? $page - $links : 1;
     $end        = ( ( $page + $links ) < $last ) ? $page + $links : $last;
  
     $html       = '<ul class="' . $list_class . '">';
- 
-
     $class      = ( $page == 1 ) ? "disabled" : "";
     $html       .= '<li class="' . $class . '"><span class="cover"></span><a href="'.$base_url.'?limit=' . $limit . '&pg=' . ( $page - 1 ) . $urlParams . '">&laquo;</a></li>';
-    
     
     if ( $start > 1 ) {
         $html   .= '<li><span class="cover"></span><a href="'.$base_url.'?limit=' . $limit . '&pg=1">1</a></li>';
@@ -437,12 +433,8 @@ function create_pagination( $links, $page, $limit, $total, $urlParams='', $list_
         $html   .= '<li><span class="cover"></span><a href="'.$base_url.'?limit=' . $limit . '&pg=' . $last . $urlParams . '">' . $last . '</a></li>';
     }
     
-    
     $class      = ( $page == $last ) ? "disabled" : "";
     $html       .= '<li class="' . $class . '"><span class="cover"></span><a href="'.$base_url.'?limit=' . $limit . '&pg=' . ( $page + 1 ) . $urlParams . '">&raquo;</a></li>';
-    
-    
- 
     $html       .= '</ul>';
  
     return $html;
@@ -458,19 +450,16 @@ function do_list_filter() {
         $the_fields = $_REQUEST['fields'];
         $params = array();
         $base_url = $_REQUEST['base_url'];
-        //$page = $_REQUEST['page'];
-        $page = 1;
+        $page = $_REQUEST['page'];
         $limit  = $_REQUEST['limit'];
         $links  = $_REQUEST['links'];
-        $url_params = '?pg=' . $page . '&limit=' . $limit . '&links=' . $links;
+        $url_params = '?limit=' . $limit . '&pg=' . $page . '&links=' . $links;
         $pagination_params = '';
         foreach($the_fields as $a) {
             $field = $a['name'];
             $val = $a['value'];
             $params[$field] = $val;
             if( is_array($val) ) {
-                //types%5B%5D=2&types%5B%5D=4&types%5B%5D=6
-                //$arr_val = http_build_query($val);
                 $arr_val = '';
                 if($val) {
                     $j=1; foreach($val as $av) {

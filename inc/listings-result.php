@@ -1,6 +1,5 @@
 <?php  
-function do_display_listings($search_results,$links, $page, $limit,$urlParams=null) {
-    //$search_results = listing_query($params,$pg,$limit);
+function do_display_listings($search_results,$links,$page,$limit,$urlParams=null) {    
     if ( $search_results ) { 
     $records = $search_results['records'];
     $total_pages = $search_results['total'];
@@ -95,13 +94,12 @@ function do_display_listings($search_results,$links, $page, $limit,$urlParams=nu
     </div>
     <?php $i++; } ?>
 
-    <?php if ($total_pages > 1) { ?>
-        <div id="pagination" class="pagination-wrapper clear">
-        <?php   
-            echo create_pagination( $links, $page, $limit, $total_pages, $urlParams, 'pagination' );
-        ?>
-        </div>
-    <?php } ?> 
+
+    <div id="pagination" class="pagination-wrapper clear">
+    <?php   
+        echo create_pagination( $links, $page, $limit, $total_pages, $urlParams, 'pagination' );
+    ?>
+    </div>
                              
 </div>   
     <?php } else { ?>

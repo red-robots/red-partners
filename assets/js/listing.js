@@ -96,7 +96,7 @@ jQuery(document).ready(function($){
             data : {
                 action : 'do_list_filter',
                 fields : the_fields,
-                page : $('input.page').val(),
+                page : 1,
                 limit : $('input.limit').val(),
                 links : $('input.links').val(),
                 base_url : $('input.current_url').val()
