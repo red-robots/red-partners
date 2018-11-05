@@ -15,7 +15,6 @@ $params = ( isset($_GET) ) ? $_GET : array();
 $limit  = ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : $limit_num;
 $page   = ( isset( $_GET['pg'] ) ) ? $_GET['pg'] : 1;
 
-
 $links  = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 7;
 $search_results = listing_query($params,$page,$limit);
 $has_result = ( isset($search_results['records']) && $search_results['records'] ) ? true : false;
@@ -47,7 +46,7 @@ if($params) {
 ?>
 
 
-<div id="main">
+<div id="main" class="clear contentwrapper">
     <div id="mainContent" class="page-content clear wrapper">
         
         <div class="main-page-content">
@@ -55,8 +54,6 @@ if($params) {
                 <?php the_content(); ?>
             <?php endwhile; ?>
         </div>
-        
-        <h1>Search Properties</h1>
         
         <div class="sp-form-wrapper wrapper">
             <?php get_template_part('inc/search-properties-form'); ?>
@@ -85,7 +82,5 @@ if($params) {
         <div id="pageErrors" class="clear wrapper"></div>
         
     </div>
-    
-    
 </div>
 <?php get_footer(); ?>

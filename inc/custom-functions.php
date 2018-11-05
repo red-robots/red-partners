@@ -1,4 +1,12 @@
 <?php
+function convert_string_to_friendly($string) {
+    $string = strtolower($string);
+    $string = preg_replace("/[^a-z0-9_\s-]/", "_", $string);
+    $string = preg_replace("/[\s-]+/", " ", $string);
+    $string = preg_replace("/[\s_]/", "_", $string);
+    return $string;
+}
+
 function listing_states() {
     global $wpdb;
     $row = $wpdb->get_row( "SELECT post_content FROM {$wpdb->prefix}posts WHERE post_type='acf-field' AND post_excerpt='listing_state'", OBJECT );
@@ -14,41 +22,179 @@ function listing_states() {
 
 function listing_status() {
     global $wpdb;
-    $row = $wpdb->get_row( "SELECT post_content FROM {$wpdb->prefix}posts WHERE post_type='acf-field' AND post_excerpt='listing_status'", OBJECT );
-    $choices = '';
-    if($row) {
-        $result = unserialize($row->post_content);
-        if( isset($result['choices']) && $result['choices'] ) {
-            $choices = $result['choices'];
+//    $row = $wpdb->get_row( "SELECT post_content FROM {$wpdb->prefix}posts WHERE post_type='acf-field' AND post_excerpt='listing_status'", OBJECT );
+//    $choices = '';
+//    if($row) {
+//        $result = unserialize($row->post_content);
+//        if( isset($result['choices']) && $result['choices'] ) {
+//            $choices = $result['choices'];
+//        }
+//    }
+//    return $choices;
+    
+    $prefix = $wpdb->prefix;
+    $sql = "SELECT m.post_id,m.meta_value FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id=p.ID WHERE m.meta_key='listing_status' AND p.post_status='publish' GROUP BY m.meta_value ORDER BY m.meta_value ASC";
+    $result = $wpdb->get_results($sql,OBJECT);
+    return ($result) ? $result : false;
+}
+
+function count_list_status() {
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $result = listing_status();
+    $statuses = array();
+    if($result) {
+        foreach($result as $row) {
+            $post_id = $row->post_id;
+            $status = $row->meta_value;
+            $sql = "SELECT m.meta_value FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id=p.ID WHERE m.meta_key='listing_status' AND m.meta_value='".$status."' AND p.post_status='publish'";
+            $result2 = $wpdb->get_results( $sql, OBJECT );
+            if($result2) {
+                $total = count($result2);
+                foreach($result2 as $rr) {
+                    $str = $rr->meta_value;
+                    $k = convert_string_to_friendly($str);
+                    $statuses[$k] = array('name'=>$str,'count'=>$total);
+                }
+            }
         }
     }
-    return $choices;
+    return $statuses;
 }
 
 function listing_cities() {
     global $wpdb;
-    $result = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key='listing_city' GROUP BY meta_value ORDER BY meta_value ASC", OBJECT );
+//    $result = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key='listing_city' GROUP BY meta_value ORDER BY meta_value ASC", OBJECT );
+//    return ($result) ? $result : false;
+    
+    $prefix = $wpdb->prefix;
+    $sql = "SELECT * FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id=p.ID WHERE m.meta_key='listing_city' AND p.post_status='publish' GROUP BY m.meta_value ORDER BY m.meta_value ASC";
+    $result = $wpdb->get_results($sql,OBJECT);
     return ($result) ? $result : false;
+}
+
+function count_list_cities() {
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $result = listing_cities();
+    $cities = array();
+    if($result) {
+        foreach($result as $row) {
+            $post_id = $row->post_id;
+            $city_name = $row->meta_value;
+            $sql = "SELECT m.meta_value FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id = p.ID WHERE m.meta_key='listing_city' AND m.meta_value='".$city_name."' AND p.post_status='publish'";
+            $result2 = $wpdb->get_results( $sql, OBJECT );
+            if($result2) {
+                $total = count($result2);
+                foreach($result2 as $rr) {
+                    $city = $rr->meta_value;
+                    $k = convert_string_to_friendly($city);
+                    $cities[$k] = array('name'=>$city,'count'=>$total);
+                }
+            }
+        }
+    }
+    return $cities;
 }
 
 function listing_zipcodes() {
     global $wpdb;
-    $result = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key='listing_zip_code' GROUP BY meta_value ORDER BY meta_value ASC", OBJECT );
+    $prefix = $wpdb->prefix;
+    $sql = "SELECT * FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id=p.ID WHERE m.meta_key='listing_zip_code' AND p.post_status='publish' GROUP BY m.meta_value ORDER BY m.meta_value ASC";
+    $result = $wpdb->get_results($sql,OBJECT);
     return ($result) ? $result : false;
+}
+
+function count_list_zipcodes() {
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $result = listing_zipcodes();
+    $zipcodes = array();
+    if($result) {
+        foreach($result as $row) {
+            $post_id = $row->post_id;
+            $zip = $row->meta_value;
+            $sql = "SELECT m.meta_value FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id = p.ID WHERE m.meta_key='listing_zip_code' AND  m.meta_value='".$zip."' AND p.post_status='publish'";
+            $result2 = $wpdb->get_results( $sql, OBJECT );
+            if($result2) {
+                $total = count($result2);
+                foreach($result2 as $rr) {
+                    $zipCode = $rr->meta_value;
+                    $k = convert_string_to_friendly($zipCode);
+                    $zipcodes[$k] = array('name'=>$zipCode,'count'=>$total);
+                }
+            }
+        }
+    }
+    return $zipcodes;
 }
 
 function listing_brokers() {
     global $wpdb;
-    $result = $wpdb->get_results( "SELECT ID, post_title FROM {$wpdb->prefix}posts WHERE post_type='our-people' AND post_status='publish' ORDER BY post_title ASC", OBJECT );
+    $prefix = $wpdb->prefix;
+    $sql = "SELECT p.ID, m.meta_value as post_id, p.post_title FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.meta_value=p.ID WHERE m.meta_key='listing_broker' AND p.post_status='publish' GROUP BY m.meta_value ORDER BY p.post_title ASC";
+    $result = $wpdb->get_results($sql,OBJECT);
     return ($result) ? $result : false;
 }
 
+function count_list_brokers() {
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $result = listing_brokers();
+    $brokers = array();
+    if($result) {
+        foreach($result as $row) {
+            $post_id = $row->post_id;
+            $broker_name = $row->post_title;
+            $sql = "SELECT p.ID, m.meta_value as post_id, p.post_title FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.meta_value=p.ID WHERE m.meta_key='listing_broker' AND  m.meta_value='".$post_id."' AND p.post_status='publish'";
+            $result2 = $wpdb->get_results( $sql, OBJECT );
+            if($result2) {
+                $total = count($result2);
+                foreach($result2 as $rr) {
+                    $brokers[$post_id] = array('name'=>$broker_name,'count'=>$total);
+                }
+            }
+        }
+    }
+    return $brokers;
+}
+
 function listing_property_types() {
-    $terms = get_terms( array(
-        'taxonomy' => 'property_types',
-        'hide_empty' => false,
-    ) );
-    return ($terms) ? $terms : false;
+//    $terms = get_terms( array(
+//        'taxonomy' => 'property_types',
+//        'hide_empty' => false,
+//    ) );
+//    return ($terms) ? $terms : false;
+    
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $sql = "SELECT rel.term_taxonomy_id as term_id, term.name FROM " . $prefix . "term_relationships as rel, ".$prefix . "posts as p, ".$prefix."terms as term, ".$prefix."term_taxonomy as tax WHERE rel.term_taxonomy_id=term.term_id AND (term.term_id=tax.term_id AND tax.taxonomy='property_types') AND rel.object_id=p.ID AND p.post_status='publish' GROUP BY rel.term_taxonomy_id ORDER BY term.name ASC";
+    $result = $wpdb->get_results($sql,OBJECT);
+    return ($result) ? $result : false;
+}
+
+function count_list_property_types() {
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $result = listing_property_types();
+    $types = array();
+    if($result) {
+        foreach($result as $row) {
+            $term_id = $row->term_id;
+            $sql = "SELECT rel.term_taxonomy_id as term_id, term.name FROM " . $prefix . "term_relationships as rel, ".$prefix . "posts as p, ".$prefix."terms as term, ".$prefix."term_taxonomy as tax WHERE rel.term_taxonomy_id=term.term_id AND (term.term_id=tax.term_id AND tax.taxonomy='property_types') AND rel.object_id=p.ID AND p.post_status='publish' AND rel.term_taxonomy_id=" . $term_id;
+            $result2 = $wpdb->get_results($sql,OBJECT);
+            if($result2) {
+                $total = count($result2);
+                foreach($result2 as $rr) {
+                    $id = $rr->term_id;
+                    $name = $rr->name;
+                    $types[$term_id] = array('name'=>$name,'term_id'=>$id,'count'=>$total);
+                }
+            }
+        }
+    }
+    
+    return ($types) ? $types : false;   
 }
 
 function add_query_vars_filter( $vars ) {

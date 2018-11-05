@@ -43,9 +43,9 @@ else { document.getElementById(d).style.display = "none"; }
 
 
 
-<div id="main-header">
+<div id="main-header" class="clear">
 
-<div id="header">
+<div id="header" class="clear">
 
     <div id="logo">
     <a href="<?php bloginfo('url'); ?>"><img src="<?php bloginfo('template_url'); ?>/images/red-partners-logo.png" alt="" border="0"></a> 
