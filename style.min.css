@@ -2135,5 +2135,6 @@ hr{color:#000;background-color:#000;border:0;height:1px}
 .property-lists .infoCol .location,.property-lists .infoCol .features{width:100%;text-align:center}
 .property-lists .infoCol .location .pad,.property-lists .infoCol .features .pad{padding-left:0;padding-right:0}
 .property-lists .infoCol .location{margin-bottom:20px}
-}.infinite-scroll .posts-navigation,.infinite-scroll.neverending .site-footer{display:none}
+}select.mdb-select{display:none}
+.infinite-scroll .posts-navigation,.infinite-scroll.neverending .site-footer{display:none}
 .infinity-end.neverending .site-footer{display:block}
