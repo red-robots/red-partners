@@ -125,6 +125,9 @@ jQuery(document).ready(function($){
                             $('#spinner').hide();
                             $('#listingFilter').removeClass('disable-form');
                             $('#list_container').html(output);
+                            $('a.popup').colorbox({
+                                height: '95%'
+                            });
                         },800);
                     } 
                     

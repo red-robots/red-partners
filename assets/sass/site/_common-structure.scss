@@ -2118,6 +2118,11 @@ ol.pings h3 {
         img {
             width: 100%;
             height: auto;
+            float: left;
+        }
+        a.popup {
+            display:block;
+            float: left;
         }
         .types {
             position: absolute;
@@ -2555,4 +2560,8 @@ ol.pings h3 {
 
 select.mdb-select {
     display: none;
+}
+
+#colorbox #cboxTitle {
+    color:$color-red;
 }

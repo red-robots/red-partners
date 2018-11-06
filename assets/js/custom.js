@@ -25,5 +25,7 @@ jQuery(document).ready(function($){
         return false;
     });
 
-    
+    $('a.popup').colorbox({
+        height: '95%'
+    });
 });

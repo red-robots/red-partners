@@ -16,6 +16,7 @@ if ( $items->have_posts() ) { ?>
         <?php $i=1; while ( $items->have_posts() ) : $items->the_post(); 
             $post_id = get_the_ID();
             $pic = get_field('listing_image',$post_id);
+            $pic_url = ($pic) ? $pic['sizes']['medium_large'] : '';
             $types = get_the_terms($post_id,'property_types');
             $the_types = '';
             if($types) {
@@ -47,6 +48,7 @@ if ( $items->have_posts() ) { ?>
             $pdf = get_field('listing_pdf_link',$post_id);
             $pdf_link = ($pdf) ? $pdf['url'] : '';
             $first_row = ($i==1) ? ' first':'';
+
         ?>
         <div id="property_<?php the_ID();?>" class="property clear <?php echo $divClass . $first_row;?>">
             <div class="imagecol">
@@ -57,7 +59,7 @@ if ( $items->have_posts() ) { ?>
                 <?php } ?>
 
                 <?php if($pic) { ?>
-                <div class="img"><img src="<?php echo $pic['url']?>" alt="<?php echo $pic['title']?>" /></div>
+                <div class="img"><a href="<?php echo $pic['url']?>" class="popup" title="<?php the_title(); ?>"><img src="<?php echo $pic_url?>" alt="<?php echo $pic['title']?>" /></a></div>
                 <?php } else { ?>
                 <div class="no-img"><i class="dashicons dashicons-admin-home"></i></div>
                 <?php } ?>

@@ -16,6 +16,7 @@ function do_display_listings($search_results,$links,$page,$limit,$urlParams=null
     foreach($records as $row) { 
         $post_id = $row->post_id;
         $pic = get_field('listing_image',$post_id);
+        $pic_url = ($pic) ? $pic['sizes']['medium_large'] : '';
         $types = get_the_terms($post_id,'property_types');
         $the_types = '';
         if($types) {
@@ -57,7 +58,7 @@ function do_display_listings($search_results,$links,$page,$limit,$urlParams=null
             <?php } ?>
 
             <?php if($pic) { ?>
-            <div class="img"><img src="<?php echo $pic['url']?>" alt="<?php echo $pic['title']?>" /></div>
+            <div class="img"><a href="<?php echo $pic['url']?>" class="popup" title="<?php echo get_the_title($post_id); ?>"><img src="<?php echo $pic_url?>" alt="<?php echo $pic['title']?>" /></a></div>
             <?php } else { ?>
             <div class="no-img"><i class="dashicons dashicons-admin-home"></i></div>
             <?php } ?>
