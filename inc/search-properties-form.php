@@ -11,7 +11,7 @@ $count_brokers = count_list_brokers();
 $count_status = count_list_status();
 $count_properties = count_list_property_types();
 
-$limit = ( isset($_GET['limit']) && $_GET['limit'] ) ? $_GET['limit'] : 2;
+$limit = ( isset($_GET['limit']) && $_GET['limit'] ) ? $_GET['limit'] : 15;
 $links = 7;
 $pg = ( isset($_GET['pg']) && $_GET['pg'] ) ? $_GET['pg'] : 1;
 global $post;
