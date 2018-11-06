@@ -44,7 +44,8 @@ if ( $items->have_posts() ) { ?>
             $availability = get_field('listing_availability',$post_id);
             $status = get_field('listing_status',$post_id);
             $features = get_field('listing_features',$post_id);
-            $pdf_link = get_field('listing_pdf_link',$post_id);
+            $pdf = get_field('listing_pdf_link',$post_id);
+            $pdf_link = ($pdf) ? $pdf['url'] : '';
             $first_row = ($i==1) ? ' first':'';
         ?>
         <div id="property_<?php the_ID();?>" class="property clear <?php echo $divClass . $first_row;?>">

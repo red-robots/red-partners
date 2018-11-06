@@ -56,7 +56,7 @@ else { document.getElementById(d).style.display = "none"; }
    
  <div id="header-content1-wrapper">   
 <div id="header-content1">704.333.7997</div>
-<div id="header-content2"><a href="<?php bloginfo('url'); ?>/brokerage/available-listings/">Available Listings</a></div></div> <div id="header-content3"><a href="<?php bloginfo('url'); ?>/news">NEWS</a> &nbsp;&nbsp; <a href="<?php bloginfo('url'); ?>/contact-us">CONTACT US</a></div>
+<div id="header-content2"><a href="<?php bloginfo('url'); ?>/listings/">Available Listings</a></div></div> <div id="header-content3"><a href="<?php bloginfo('url'); ?>/news">NEWS</a> &nbsp;&nbsp; <a href="<?php bloginfo('url'); ?>/contact-us">CONTACT US</a></div>
     </div><!-- #logo -->    
     
     
