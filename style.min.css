@@ -2132,10 +2132,12 @@ hr{color:#000;background-color:#000;border:0;height:1px}
 .property-lists .infoCol .features .pad{padding-right:0}
 .property-lists .infoCol .location .pad{padding-left:0}
 .property-lists .plink{margin:0 auto;width:100%}
+.search-properties-form .form-group{width:50%}
 }@media screen and (max-width:480px){.property-lists .imagecol{width:100%;float:left}
 .property-lists .infoCol .location,.property-lists .infoCol .features{width:100%;text-align:center}
 .property-lists .infoCol .location .pad,.property-lists .infoCol .features .pad{padding-left:0;padding-right:0}
 .property-lists .infoCol .location{margin-bottom:20px}
+.search-properties-form .form-group{width:100%}
 }select.mdb-select{display:none}
 #colorbox #cboxTitle{color:#8f0411}
 .infinite-scroll .posts-navigation,.infinite-scroll.neverending .site-footer{display:none}

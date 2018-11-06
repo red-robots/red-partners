@@ -2535,6 +2535,9 @@ ol.pings h3 {
         margin: 0 auto;
         width: 100%;
     }
+    .search-properties-form .form-group {
+        width: 50%;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -2555,6 +2558,9 @@ ol.pings h3 {
         .location {
             margin-bottom: 20px;
         }
+    }
+    .search-properties-form .form-group {
+        width: 100%;
     }
 }
 
