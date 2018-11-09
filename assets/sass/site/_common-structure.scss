@@ -2142,7 +2142,7 @@ ol.pings h3 {
     }
     .location,
     .features {
-        width: 39%;
+        hyphens: none;
         .pad {
             padding-left: 15px;
             padding-right: 15px;
@@ -2151,7 +2151,14 @@ ol.pings h3 {
             margin-bottom: 15px;
         }
     }
+    .location {
+        width: 35%;
+    }
     .features {
+        width: 40%;
+        .pad {
+            padding-left: 0;
+        }
         .info {
             line-height: 1.2;
         }
@@ -2161,7 +2168,8 @@ ol.pings h3 {
         }
     }
     .details {
-        width: 22%;
+        width: 25%;
+        hyphens: none;
     }
     .property-name {
         margin: 0 0 15px;
@@ -2171,7 +2179,7 @@ ol.pings h3 {
     .plink {
         display: block;
         padding:10px 20px;
-        width: 141px;
+        width: 100%;
         box-sizing: border-box;
         background: #3F5BA9;
         color:#FFF;
@@ -2184,7 +2192,35 @@ ol.pings h3 {
             background: #263a71;
         }
     }
+    .details.has-broker .plink {
+        margin-bottom: 15px;
+    }
+    .broker-info {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding-left: 20px;
+        position: relative;
+        .icon {
+            position: absolute;
+            top: 3px;
+            left: 0;
+            font-size: 13px;
+            color: #9e9e9e;
+        }
+        &.name {
+            .icon {
+                top: 2px;
+            }
+        }
+        &.email .icon {
+            font-size: 12px;
+        }
+        a {
+            text-decoration: none;
+        }
+    }
 }
+
 
 #pagination {
     margin-top:30px;
@@ -2571,3 +2607,4 @@ select.mdb-select {
 #colorbox #cboxTitle {
     color:$color-red;
 }
+
