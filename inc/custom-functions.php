@@ -21,17 +21,7 @@ function listing_states() {
 }
 
 function listing_status() {
-    global $wpdb;
-//    $row = $wpdb->get_row( "SELECT post_content FROM {$wpdb->prefix}posts WHERE post_type='acf-field' AND post_excerpt='listing_status'", OBJECT );
-//    $choices = '';
-//    if($row) {
-//        $result = unserialize($row->post_content);
-//        if( isset($result['choices']) && $result['choices'] ) {
-//            $choices = $result['choices'];
-//        }
-//    }
-//    return $choices;
-    
+    global $wpdb;    
     $prefix = $wpdb->prefix;
     $sql = "SELECT m.post_id,m.meta_value FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id=p.ID WHERE m.meta_key='listing_status' AND p.post_status='publish' GROUP BY m.meta_value ORDER BY m.meta_value ASC";
     $result = $wpdb->get_results($sql,OBJECT);
@@ -64,9 +54,6 @@ function count_list_status() {
 
 function listing_cities() {
     global $wpdb;
-//    $result = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key='listing_city' GROUP BY meta_value ORDER BY meta_value ASC", OBJECT );
-//    return ($result) ? $result : false;
-    
     $prefix = $wpdb->prefix;
     $sql = "SELECT * FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.post_id=p.ID WHERE m.meta_key='listing_city' AND p.post_status='publish' GROUP BY m.meta_value ORDER BY m.meta_value ASC";
     $result = $wpdb->get_results($sql,OBJECT);
@@ -132,9 +119,47 @@ function count_list_zipcodes() {
 function listing_brokers() {
     global $wpdb;
     $prefix = $wpdb->prefix;
-    $sql = "SELECT p.ID, m.meta_value as post_id, p.post_title FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.meta_value=p.ID WHERE m.meta_key='listing_broker' AND p.post_status='publish' GROUP BY m.meta_value ORDER BY p.post_title ASC";
-    $result = $wpdb->get_results($sql,OBJECT);
-    return ($result) ? $result : false;
+    $sql_query = 'SELECT meta.post_id, meta.meta_value FROM '.$prefix.'postmeta as meta, '.$prefix.'posts as post WHERE meta.meta_key="listing_broker" AND meta.post_id=post.ID AND post.post_status="publish"';
+    $result = $wpdb->get_results($sql_query,OBJECT);
+    $brokers = array();
+    $broker_ids = array();
+    $grouped = array();
+    
+    if($result) {
+        foreach($result as $row) {
+            $post_id = $row->post_id;
+            $values = ($row->meta_value) ? @unserialize($row->meta_value) : '';
+            if($values) {
+                foreach($values as $p_id) {
+                    $info = get_post($p_id);
+                    if($info && $info->post_status=='publish') {
+                        $broker_ids[] = $p_id;
+                        $grouped[$p_id][] = $post_id;
+                    }
+                }
+            }
+        } 
+        
+        if($broker_ids) {
+            $ids = array_unique($broker_ids);
+            $names = array();
+            foreach($ids as $id) {
+                $count = 0;
+                if( isset($grouped[$id]) && $grouped[$id] ) {
+                    $count = count( $grouped[$id] );
+                }
+                $names[] = (object) array( 
+                            'post_title'=>get_the_title($id),
+                            'post_id'=>$id,
+                            'count'=>$count
+                        );
+            }
+            $brokers = sortObject($names,'post_title','ASC');
+            //$brokers = array_values($brokers);
+        }
+    }
+    return $brokers;
+    
 }
 
 function count_list_brokers() {
@@ -146,26 +171,14 @@ function count_list_brokers() {
         foreach($result as $row) {
             $post_id = $row->post_id;
             $broker_name = $row->post_title;
-            $sql = "SELECT p.ID, m.meta_value as post_id, p.post_title FROM " . $prefix . "postmeta as m LEFT JOIN ".$prefix . "posts as p ON m.meta_value=p.ID WHERE m.meta_key='listing_broker' AND  m.meta_value='".$post_id."' AND p.post_status='publish'";
-            $result2 = $wpdb->get_results( $sql, OBJECT );
-            if($result2) {
-                $total = count($result2);
-                foreach($result2 as $rr) {
-                    $brokers[$post_id] = array('name'=>$broker_name,'count'=>$total);
-                }
-            }
+            $count = $row->count;
+            $brokers[$post_id] = array('name'=>$broker_name,'count'=>$count);
         }
     }
     return $brokers;
 }
 
-function listing_property_types() {
-//    $terms = get_terms( array(
-//        'taxonomy' => 'property_types',
-//        'hide_empty' => false,
-//    ) );
-//    return ($terms) ? $terms : false;
-    
+function listing_property_types() {    
     global $wpdb;
     $prefix = $wpdb->prefix;
     $sql = "SELECT rel.term_taxonomy_id as term_id, term.name FROM " . $prefix . "term_relationships as rel, ".$prefix . "posts as p, ".$prefix."terms as term, ".$prefix."term_taxonomy as tax WHERE rel.term_taxonomy_id=term.term_id AND (term.term_id=tax.term_id AND tax.taxonomy='property_types') AND rel.object_id=p.ID AND p.post_status='publish' GROUP BY rel.term_taxonomy_id ORDER BY term.name ASC";
@@ -203,6 +216,46 @@ function add_query_vars_filter( $vars ) {
 }
 add_filter( 'query_vars', 'add_query_vars_filter' );
 
+
+function  query_all_assigned_brokers($search) {
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+    $sql_query = 'SELECT meta.post_id, meta.meta_value FROM '.$prefix.'postmeta as meta, '.$prefix.'posts as post WHERE meta.meta_key="listing_broker" AND meta.post_id=post.ID AND post.post_status="publish"';
+    $result = $wpdb->get_results($sql_query,OBJECT);
+    $found = array();
+    $lists = array();
+    $items = array();
+    $sorted = array();
+    $grouped = array();
+    if($result) {
+        foreach($result as $row) {
+            $post_id = $row->post_id;
+            $values = ($row->meta_value) ? @unserialize($row->meta_value) : '';
+            if($values) {
+                foreach($values as $id) {
+                    $name = get_the_title($id);
+                    $k = sanitize_title_with_dashes($name);
+                    if( in_array($id,$search) ) {
+                        $grouped[$k][] = $post_id;
+                    }
+                }
+            }
+        }
+    }
+    
+    if( $grouped ) {
+        ksort( $grouped );
+        $i=0; foreach($grouped as $parts) {
+            foreach($parts as $pId) {
+                $found[] = $pId;
+            }
+        }
+        $lists = array_unique($found,SORT_STRING);
+    }
+    
+    return $lists;
+}
+
 function listing_query($params,$offset=0,$limit=15) {
     global $wpdb;
     $prefix = $wpdb->prefix;
@@ -212,6 +265,7 @@ function listing_query($params,$offset=0,$limit=15) {
     $search_meta = array();
     $search_results = array();
     $has_values = array();
+    $sort_by_broker = false;
     foreach($params as $key=>$val) {
         if( in_array($key,$meta_fields) ) {
             if( is_array($val) ) {
@@ -415,38 +469,36 @@ function listing_query($params,$offset=0,$limit=15) {
     }
 
 
-    /* BROKER */
+    /* MULTIPLE BROKER */
     if( isset($search_meta['broker']) && $search_meta['broker'] ) {
         $brokers = $search_meta['broker'];
         $search_results = array();
         if($result) {
+            $result_brokers = query_all_assigned_brokers($brokers);
             foreach($result as $row) {
                 $post_id = $row->post_id;
-                foreach($brokers as $broker_id) {
-                    $sql_query = $Select_From . 'WHERE meta.meta_key="listing_broker" AND meta.meta_value = '.$broker_id.' AND (meta.post_id=' . $post_id . ' AND meta.post_id=post.ID AND post.post_status="publish")';
-                    $result2 = $wpdb->get_results($sql_query,OBJECT);
-                    if($result2) {
-                        foreach($result2 as $row2) {
-                            $row2->broker_name = get_the_title($broker_id);
-                            $search_results[] =  $row2;
+                if($result_brokers) {
+                    foreach($result_brokers as $bb) {
+                        if($post_id==$bb) {
+                            $post_id = $bb;
+                            $post_title = get_the_title($post_id);
+                            $search_results[] = (object) array('post_id'=>$post_id,'post_title'=>$post_title);
                         }
                     }
                 }
             }
         } else {
-            foreach($brokers as $broker_id) {
-                $sql_query = $Select_From . 'WHERE meta.meta_key="listing_broker" AND meta.meta_value = '.$broker_id.' AND meta.post_id=post.ID AND post.post_status="publish"';
-                $result2 = $wpdb->get_results($sql_query,OBJECT);
-                if($result2) {
-                    foreach($result2 as $row2) {
-                        $post_id = $row2->post_id;
-                        $row2->broker_name = get_the_title($broker_id);
-                        $search_results[] =  $row2;
-                    }
+            $result_brokers = query_all_assigned_brokers($brokers);
+            if($result_brokers) {
+                $sort_by_broker = true;
+                foreach($result_brokers as $bb) {
+                    $post_id = $bb;
+                    $post_title = get_the_title($post_id);
+                    $search_results[] = (object) array('post_id'=>$post_id,'post_title'=>$post_title);
                 }
             }
         }
-
+        
         $result = $search_results;
     }
     
@@ -492,11 +544,18 @@ function listing_query($params,$offset=0,$limit=15) {
         $search_results = ($lists) ? array_values($lists) : '';
         $result = $search_results;       
     }
+
     
     $records = array();
     $output = array();
     if($search_results) {
-        $sorted = sortObject($search_results,'post_title','ASC');
+        
+        if($sort_by_broker==FALSE) {
+            $sorted = sortObject($search_results,'post_title','ASC');
+        } else {
+            $sorted = $search_results;
+        }
+        
         $search_results = array_values($sorted);
         $total = count($search_results);
         $start = $offset;
