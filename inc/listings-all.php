@@ -48,8 +48,6 @@ if ( $items->have_posts() ) { ?>
             $pdf = get_field('listing_pdf_link',$post_id);
             $pdf_link = ($pdf) ? $pdf['url'] : '';
             $first_row = ($i==1) ? ' first':'';
-            $brokers = get_post_meta($post_id,'listing_broker',true);
-
         ?>
         <div id="property_<?php the_ID();?>" class="property clear <?php echo $divClass . $first_row;?>">
             <div class="imagecol">
@@ -92,8 +90,10 @@ if ( $items->have_posts() ) { ?>
                     <?php if($pdf_link) { ?>
                     <a class="plink" href="<?php echo $pdf_link;?>" target="_blank">View Property</a>
                     <?php } ?>
-                    
-                    <?php if($brokers) { ?>
+    
+                    <?php 
+                    $brokers = get_post_meta($post_id,'listing_broker',true);
+                    if($brokers) { ?>
                         <?php $b=1; foreach($brokers as $broker_id) { 
                         $broker_name = get_the_title($broker_id);
                         $broker_phone = get_field('direct_number',$broker_id);
@@ -111,6 +111,7 @@ if ( $items->have_posts() ) { ?>
                         </div>
                         <?php $b++; } ?>
                     <?php } ?>  
+                    
                 </div>
             </div>    
 

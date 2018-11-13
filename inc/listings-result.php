@@ -48,15 +48,6 @@ function do_display_listings($search_results,$links,$page,$limit,$urlParams=null
         $pdf = get_field('listing_pdf_link',$post_id);
         $pdf_link = ($pdf) ? $pdf['url'] : '';
         $first_row = ($i==1) ? ' first':'';
-        
-        $broker_id = get_post_meta($post_id,'listing_broker',true);
-        $broker_name = ($broker_id) ? get_the_title($broker_id) : '';
-        $broker_phone = '';
-        $broker_email = '';
-        if($broker_id) {
-            $broker_phone = get_field('direct_number',$broker_id);
-            $broker_email = get_field('email',$broker_id);
-        }
     ?>
     <div id="property_<?php echo $post_id;?>" class="property clear <?php echo $divClass . $first_row;?>">
         <div class="imagecol">
@@ -99,15 +90,26 @@ function do_display_listings($search_results,$links,$page,$limit,$urlParams=null
                 <?php if($pdf_link) { ?>
                 <a class="plink" href="<?php echo $pdf_link;?>" target="_blank">View Property</a>
                 <?php } ?>
-                <?php if($broker_name) { ?>
-                <div class="broker-info name"><span class="icon"><i class="fa fa-user"></i></span><?php echo $broker_name;?></div>
-                <?php } ?>
-                <?php if($broker_phone) { ?>
-                <div class="broker-info phone"><span class="icon"><i class="fa fa-phone"></i></span><?php echo $broker_phone;?></div>
-                <?php } ?>
-                <?php if($broker_email) { ?>
-                <div class="broker-info email"><span class="icon"><i class="fa fa-envelope"></i></span><a href="mailto:<?php echo $broker_email;?>"><?php echo $broker_email;?></a></div>
-                <?php } ?>
+                <?php 
+                $brokers = get_post_meta($post_id,'listing_broker',true);
+                if($brokers) { ?>
+                    <?php $b=1; foreach($brokers as $broker_id) { 
+                    $broker_name = get_the_title($broker_id);
+                    $broker_phone = get_field('direct_number',$broker_id);
+                    $broker_email = get_field('email',$broker_id); ?>
+                    <div class="broker<?php echo ($b==1) ? ' first':'';?>">
+                        <?php if($broker_name) { ?>
+                        <div class="broker-info name"><span class="icon"><i class="fa fa-user"></i></span><?php echo $broker_name;?></div>
+                        <?php } ?>
+                        <?php if($broker_phone) { ?>
+                        <div class="broker-info phone"><span class="icon"><i class="fa fa-phone"></i></span><?php echo $broker_phone;?></div>
+                        <?php } ?>
+                        <?php if($broker_email) { ?>
+                        <div class="broker-info email"><span class="icon"><i class="fa fa-envelope"></i></span><a href="mailto:<?php echo $broker_email;?>"><?php echo $broker_email;?></a></div>
+                        <?php } ?>
+                    </div>
+                    <?php $b++; } ?>
+                <?php } ?>  
             </div>
         </div>    
 
