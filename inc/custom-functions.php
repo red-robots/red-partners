@@ -131,8 +131,8 @@ function listing_brokers() {
             $values = ($row->meta_value) ? @unserialize($row->meta_value) : '';
             if($values) {
                 foreach($values as $p_id) {
-                    $info = get_post($p_id);
-                    if($info && $info->post_status=='publish') {
+                    $post_status = get_post_status($p_id);
+                    if($post_status=='publish') {
                         $broker_ids[] = $p_id;
                         $grouped[$p_id][] = $post_id;
                     }
@@ -234,9 +234,11 @@ function  query_all_assigned_brokers($search) {
             if($values) {
                 foreach($values as $id) {
                     $name = get_the_title($id);
-                    $k = sanitize_title_with_dashes($name);
-                    if( in_array($id,$search) ) {
-                        $grouped[$k][] = $post_id;
+                    if($name) {
+                        $k = sanitize_title_with_dashes($name);
+                        if( in_array($id,$search) ) {
+                            $grouped[$k][] = $post_id;
+                        }
                     }
                 }
             }
